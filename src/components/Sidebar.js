@@ -1,12 +1,22 @@
 import React from "react";
 import { styled } from "styled-components";
-import SettingsIcon from "@mui/icons-material/Settings";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import GroupsIcon from "@mui/icons-material/Groups";
+import DonutLargeIcon from "@mui/icons-material/DonutLarge";
+import ChatIcon from "@mui/icons-material/Chat";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 function Sidebar() {
   return (
     <Container>
       <SidebarHeader>
-        <SettingsIcon />
+        <AccountCircleIcon />
+        <SidebarHeaderRight>
+          <GroupsIcon />
+          <DonutLargeIcon />
+          <ChatIcon />
+          <MoreVertIcon />
+        </SidebarHeaderRight>
       </SidebarHeader>
 
       <SidebarSearch></SidebarSearch>
@@ -18,9 +28,13 @@ function Sidebar() {
 
 export default Sidebar;
 
-const Container = styled.div``;
+const Container = styled.div`
+  background: #202c33;
+`;
 
 const SidebarHeader = styled.div``;
+
+const SidebarHeaderRight = styled.div``;
 
 const SidebarSearch = styled.div``;
 
