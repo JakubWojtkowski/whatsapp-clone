@@ -1,13 +1,14 @@
 import React from "react";
 import { styled } from "styled-components";
 import Sidebar from "./components/Sidebar";
+import Chat from "./components/Chat";
 
 function App() {
   return (
     <AppContainer>
       <AppContent>
         <Sidebar />
-        {/* <Chat></Chat> */}
+        <Chat />
       </AppContent>
     </AppContainer>
   );
