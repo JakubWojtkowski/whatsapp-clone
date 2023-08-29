@@ -18,7 +18,7 @@ export default App;
 const AppContainer = styled.div`
   display: grid;
   place-items: center;
-  background: #0c1317;
+  background: #0a1014;
   height: 100vh;
   color: #e9edef;
 `;

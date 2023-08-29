@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Avatar } from "@mui/material";
 import { styled } from "styled-components";
 
-function SidebarChat() {
+function SidebarChat({ addNewChat }) {
   const [seed, setSeed] = useState("");
 
   useEffect(() => {
@@ -13,8 +13,11 @@ function SidebarChat() {
     <Container>
       <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
       <ChatInfo>
-        <ChatName>Name</ChatName>
-        <ChatMessage>Last message...</ChatMessage>
+        <ChatInfoHeader>
+          <h2>Name</h2>
+          <span>12:36</span>
+        </ChatInfoHeader>
+        <p>Last message ...</p>
       </ChatInfo>
     </Container>
   );
@@ -23,14 +26,38 @@ function SidebarChat() {
 export default SidebarChat;
 
 const Container = styled.div`
-  border-width: 1px 0;
-  padding: 8px 16px;
+  display: flex;
+  padding: 20px;
+  cursor: pointer;
+  border-bottom: 1px solid #202c33;
+
+  &:hover {
+    background: #202c33;
+  }
 `;
 
 const ChatInfo = styled.div`
-  border-bottom: 1px solid #202c33;
+  margin-left: 15px;
+  flex: 1;
+
+  p {
+    font-size: 13px;
+    color: #8696a0;
+  }
 `;
 
-const ChatName = styled.div``;
+const ChatInfoHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
 
-const ChatMessage = styled.div``;
+  h2 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  span {
+    color: #8696a0;
+    font-size: 12px;
+    margin-top: 6px;
+  }
+`;

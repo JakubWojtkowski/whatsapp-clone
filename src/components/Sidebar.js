@@ -90,6 +90,7 @@ const SidebarSearch = styled.div`
   align-items: center;
   height: 39px;
   padding: 10px;
+  background: #0c1317;
 
   .MuiSvgIcon-root {
     color: grey;
@@ -117,7 +118,7 @@ const SidebarInput = styled.input`
 `;
 
 const SidebarChats = styled.div`
-  background: #111b21;
+  background: #0c1317;
   flex: 1;
   ${"" /* overflow-y: scroll; */}
 `;
