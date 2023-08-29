@@ -4,9 +4,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import GroupsIcon from "@mui/icons-material/Groups";
 import DonutLargeIcon from "@mui/icons-material/DonutLarge";
 import ChatIcon from "@mui/icons-material/Chat";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { IconButton } from "@mui/material";
-import { FilterList, SearchOutlined } from "@mui/icons-material";
+import { FilterList, MoreVert, SearchOutlined } from "@mui/icons-material";
 import SidebarChat from "./SidebarChat";
 
 function Sidebar() {
@@ -28,7 +27,7 @@ function Sidebar() {
             <ChatIcon />
           </IconButton>
           <IconButton>
-            <MoreVertIcon />
+            <MoreVert />
           </IconButton>
         </SidebarHeaderRight>
       </SidebarHeader>
