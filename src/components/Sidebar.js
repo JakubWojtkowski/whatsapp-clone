@@ -7,6 +7,7 @@ import ChatIcon from "@mui/icons-material/Chat";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { IconButton } from "@mui/material";
 import { FilterList, SearchOutlined } from "@mui/icons-material";
+import SidebarChat from "./SidebarChat";
 
 function Sidebar() {
   return (
@@ -42,7 +43,12 @@ function Sidebar() {
         </IconButton>
       </SidebarSearch>
 
-      <SidebarChats></SidebarChats>
+      <SidebarChats>
+        <SidebarChat />
+        <SidebarChat />
+        <SidebarChat />
+        <SidebarChat />
+      </SidebarChats>
     </Container>
   );
 }
@@ -53,7 +59,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   flex: 0.35;
-  background: #202c33;
 
   .MuiSvgIcon-root {
     color: lightgrey;
@@ -64,6 +69,7 @@ const SidebarHeader = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 20px;
+  background: #202c33;
 `;
 
 const SidebarHeaderRight = styled.div`
@@ -94,15 +100,16 @@ const SidebarSearchContent = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid #f0f0f0;
   border-radius: 8px;
   padding: 4px 16px;
+  background-color: #202c33;
 `;
 
 const SidebarInput = styled.input`
   background-color: #202c33;
   border: none;
   margin-left: 12px;
+  color: #e9edef;
 
   &:focus {
     outline: none;
@@ -112,4 +119,5 @@ const SidebarInput = styled.input`
 const SidebarChats = styled.div`
   background: #111b21;
   flex: 1;
+  ${"" /* overflow-y: scroll; */}
 `;

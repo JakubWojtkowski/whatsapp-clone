@@ -20,6 +20,7 @@ const AppContainer = styled.div`
   place-items: center;
   background: #0c1317;
   height: 100vh;
+  color: #e9edef;
 `;
 
 const AppContent = styled.div`
