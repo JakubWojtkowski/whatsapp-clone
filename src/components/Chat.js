@@ -58,9 +58,22 @@ const ChatHeader = styled.div`
 const ChatHeaderInfo = styled.div`
   flex: 1;
   padding-left: 20px;
+
+  h3 {
+    margin-bottom: 2px;
+    font-weight: 500;
+  }
+
+  p {
+    color: #8696a0;
+  }
 `;
 
-const ChatHeaderRight = styled.div``;
+const ChatHeaderRight = styled.div`
+  display: flex;
+  justify-content: space-between;
+  min-width: 90px;
+`;
 
 const ChatBody = styled.div``;
 
