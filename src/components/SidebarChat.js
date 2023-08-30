@@ -51,7 +51,7 @@ const ChatInfoHeader = styled.div`
   justify-content: space-between;
 
   h2 {
-    font-size: 1rem;
+    font-size: 16px;
     margin-bottom: 8px;
   }
 

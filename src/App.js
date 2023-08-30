@@ -21,7 +21,6 @@ const AppContainer = styled.div`
   place-items: center;
   background: #0a1014;
   height: 100vh;
-  color: #e9edef;
 `;
 
 const AppContent = styled.div`

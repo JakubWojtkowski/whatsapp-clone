@@ -1,10 +1,9 @@
 import React from "react";
 import { styled } from "styled-components";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import GroupsIcon from "@mui/icons-material/Groups";
 import DonutLargeIcon from "@mui/icons-material/DonutLarge";
 import ChatIcon from "@mui/icons-material/Chat";
-import { IconButton } from "@mui/material";
+import { Avatar, IconButton } from "@mui/material";
 import { FilterList, MoreVert, SearchOutlined } from "@mui/icons-material";
 import SidebarChat from "./SidebarChat";
 
@@ -13,7 +12,7 @@ function Sidebar() {
     <Container>
       <SidebarHeader>
         <IconButton>
-          <AccountCircleIcon />
+          <Avatar />
         </IconButton>
 
         <SidebarHeaderRight>
@@ -69,6 +68,7 @@ const SidebarHeader = styled.div`
   justify-content: space-between;
   padding: 20px;
   background: #202c33;
+  border-right: 1px solid #0c1317;
 `;
 
 const SidebarHeaderRight = styled.div`
@@ -78,7 +78,7 @@ const SidebarHeaderRight = styled.div`
   min-width: 10vw;
 
   .MuiSvgIcon-root {
-    margin-right: 2px;
+    margin-right: 2vw;
     font-size: 24px !important;
   }
 `;
