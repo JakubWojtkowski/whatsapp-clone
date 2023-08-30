@@ -1,11 +1,25 @@
-import { MoreVert, SearchOutlined } from "@mui/icons-material";
+import {
+  Add,
+  InsertEmoticon,
+  Mic,
+  MoreVert,
+  SearchOutlined,
+  Send,
+} from "@mui/icons-material";
 import { Avatar, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
 function Chat(props) {
   const [seed, setSeed] = useState("");
+  const [input, setInput] = useState("");
   const [incoming, setIncoming] = useState(false);
+
+  const sendMessage = (event) => {
+    event.preventDefault();
+    console.log("okej ", input);
+    setInput("");
+  };
 
   useEffect(() => {
     setSeed(Math.floor(Math.random() * 5000));
@@ -40,7 +54,31 @@ function Chat(props) {
         </ChatBodyMessage>
       </ChatBody>
 
-      <ChatFooter></ChatFooter>
+      <ChatFooter>
+        <IconButton>
+          <InsertEmoticon />
+        </IconButton>
+
+        <IconButton>
+          <Add />
+        </IconButton>
+
+        <ChatFooterForm>
+          <FormInput
+            type="text"
+            placeholder="Type a message"
+            value={input}
+            onChange={(event) => {
+              setInput(event.target.value);
+            }}
+          ></FormInput>
+          <FormButton onClick={sendMessage} type="submit">
+            Send a message
+          </FormButton>
+        </ChatFooterForm>
+
+        <IconButton>{input === "" ? <Mic /> : <Send />}</IconButton>
+      </ChatFooter>
     </Container>
   );
 }
@@ -50,19 +88,20 @@ export default Chat;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 0.65;
+  flex: 0.7;
   background: #202c33;
+
+  .MuiSvgIcon-root {
+    color: #aebac1;
+    font-size: 24px !important;
+  }
 `;
 
 const ChatHeader = styled.div`
   display: flex;
   align-items: center;
-  padding: 20px;
+  padding: 6px;
   border-bottom: 1px solid #0c1317;
-
-  .MuiSvgIcon-root {
-    color: lightgrey;
-  }
 `;
 
 const ChatHeaderInfo = styled.div`
@@ -87,11 +126,23 @@ const ChatHeaderRight = styled.div`
 
 const ChatBody = styled.div`
   flex: 1;
-  background-image: url("/images/whatsapp-background.png");
-  background-size: cover;
-  background-repeat: repeat;
   padding: 30px;
+  position: relative;
+  z-index: 0;
 
+  &:before {
+    position: absolute;
+    content: "";
+    background-image: url("/images/whatsapp-background.png");
+    background-size: contain;
+    background-repeat: repeat;
+    background-position: top;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    opacity: 0.75;
+  }
   ${"" /* overflow-y: scroll; */}
 `;
 
@@ -131,4 +182,37 @@ const ChatBodyMessageTime = styled.span`
   color: #8696a0;
 `;
 
-const ChatFooter = styled.div``;
+const ChatFooter = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 62px;
+
+  .MuiSvgIcon-root {
+    color: #8696a0;
+    padding: 6px;
+    font-size: 26px !important;
+  }
+`;
+
+const ChatFooterForm = styled.form`
+  flex: 1;
+  display: flex;
+`;
+
+const FormInput = styled.input`
+  background: #2a3942;
+  flex: 1;
+  border-radius: 8px;
+  border: none;
+  padding: 14px;
+  color: #e9edef;
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const FormButton = styled.button`
+  display: none;
+`;

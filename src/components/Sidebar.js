@@ -56,29 +56,28 @@ export default Sidebar;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 0.35;
+  flex: 0.3;
 
   .MuiSvgIcon-root {
-    color: lightgrey;
+    color: #aebac1;
   }
 `;
 
 const SidebarHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 20px;
+  padding: 6px;
   background: #202c33;
   border-right: 1px solid #0c1317;
 `;
 
 const SidebarHeaderRight = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
   min-width: 10vw;
 
   .MuiSvgIcon-root {
-    margin-right: 2vw;
+    margin-right: 10px;
     font-size: 24px !important;
   }
 `;
@@ -89,7 +88,7 @@ const SidebarSearch = styled.div`
   align-items: center;
   height: 39px;
   padding: 10px;
-  background: #0c1317;
+  background: #111b21;
 
   .MuiSvgIcon-root {
     color: grey;
@@ -98,17 +97,18 @@ const SidebarSearch = styled.div`
 
 const SidebarSearchContent = styled.div`
   display: flex;
+  flex: 1;
   align-items: center;
-  justify-content: space-between;
   border-radius: 8px;
   padding: 4px 16px;
-  background-color: #202c33;
+  background-color: #2a3942;
 `;
 
 const SidebarInput = styled.input`
-  background-color: #202c33;
+  background-color: #2a3942;
+  flex: 1;
   border: none;
-  margin-left: 12px;
+  margin: 0 16px;
   color: #e9edef;
 
   &:focus {
@@ -117,7 +117,7 @@ const SidebarInput = styled.input`
 `;
 
 const SidebarChats = styled.div`
-  background: #0c1317;
+  background: #111b21;
   flex: 1;
-  ${"" /* overflow-y: scroll; */}
+  overflow-y: scroll;
 `;

@@ -29,7 +29,7 @@ const AppContent = styled.div`
   width: 97.5vw;
   box-shadow: -1px 4px 10px -6px rgba(0, 0, 0, 0.7);
 
-  @media only screen and (max-width: 1024px) {
+  @media only screen and (max-width: 1440px) {
     height: 100vh;
     width: 100vw;
   }
