@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import GroupsIcon from "@mui/icons-material/Groups";
 import DonutLargeIcon from "@mui/icons-material/DonutLarge";
@@ -6,8 +6,27 @@ import ChatIcon from "@mui/icons-material/Chat";
 import { Avatar, IconButton } from "@mui/material";
 import { FilterList, MoreVert, SearchOutlined } from "@mui/icons-material";
 import SidebarChat from "./SidebarChat";
+import { db } from "../firebase";
+import { collection, onSnapshot } from "firebase/firestore";
 
 function Sidebar() {
+  const [chats, setChats] = useState([]);
+
+  async function queryCollection() {
+    onSnapshot(collection(db, "chats"), (snapshot) => {
+      setChats(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }))
+      );
+    });
+  }
+
+  useEffect(() => {
+    queryCollection();
+  }, []);
+
   return (
     <Container>
       <SidebarHeader>
@@ -40,13 +59,10 @@ function Sidebar() {
           <FilterList />
         </IconButton>
       </SidebarSearch>
-
-      <SidebarChats>
-        <SidebarChat />
-        <SidebarChat />
-        <SidebarChat />
-        <SidebarChat />
-      </SidebarChats>
+      {chats.map((chat) => {
+        return <SidebarChat key={chat.id} id={chat.id} name={chat.data.name} />;
+      })}
+      <SidebarChats></SidebarChats>
     </Container>
   );
 }
