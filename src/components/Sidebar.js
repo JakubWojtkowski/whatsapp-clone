@@ -13,7 +13,7 @@ function Sidebar() {
   const [chats, setChats] = useState([]);
 
   async function queryCollection() {
-    onSnapshot(collection(db, "chats"), (snapshot) => {
+    const unsubscribe = onSnapshot(collection(db, "chats"), (snapshot) => {
       setChats(
         snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -21,6 +21,10 @@ function Sidebar() {
         }))
       );
     });
+
+    return () => {
+      unsubscribe();
+    };
   }
 
   useEffect(() => {
