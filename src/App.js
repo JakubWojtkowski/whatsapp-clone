@@ -2,13 +2,24 @@ import React from "react";
 import { styled } from "styled-components";
 import Sidebar from "./components/Sidebar";
 import Chat from "./components/Chat";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 function App() {
   return (
     <AppContainer>
       <AppContent>
-        <Sidebar />
-        <Chat />
+        <Router>
+          <Sidebar />
+          <Switch>
+            <Route path="/chats/:chatId">
+              <Chat />
+            </Route>
+
+            <Route path="/">
+              <h1>home screen</h1>
+            </Route>
+          </Switch>
+        </Router>
       </AppContent>
     </AppContainer>
   );
