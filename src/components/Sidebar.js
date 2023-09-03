@@ -63,10 +63,14 @@ function Sidebar() {
           <FilterList />
         </IconButton>
       </SidebarSearch>
-      {chats.map((chat) => {
-        return <SidebarChat key={chat.id} id={chat.id} name={chat.data.name} />;
-      })}
-      <SidebarChats></SidebarChats>
+
+      <SidebarChats>
+        {chats.map((chat) => {
+          return (
+            <SidebarChat key={chat.id} id={chat.id} name={chat.data.name} />
+          );
+        })}
+      </SidebarChats>
     </Container>
   );
 }

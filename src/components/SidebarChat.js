@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Avatar } from "@mui/material";
 import { styled } from "styled-components";
+import { Link } from "react-router-dom/cjs/react-router-dom";
 
 function SidebarChat(props) {
   const [seed, setSeed] = useState("");
@@ -10,16 +11,18 @@ function SidebarChat(props) {
   }, []);
 
   return (
-    <Container>
-      <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
-      <ChatInfo>
-        <ChatInfoHeader>
-          <h2>{props.name}</h2>
-          <span>12:36</span>
-        </ChatInfoHeader>
-        <p>Last message ...</p>
-      </ChatInfo>
-    </Container>
+    <Link to={`/chats/${props.id}`}>
+      <Container>
+        <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
+        <ChatInfo>
+          <ChatInfoHeader>
+            <h2>{props.name}</h2>
+            <span>12:36</span>
+          </ChatInfoHeader>
+          <p>Last message ...</p>
+        </ChatInfo>
+      </Container>
+    </Link>
   );
 }
 

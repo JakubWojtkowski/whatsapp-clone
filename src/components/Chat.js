@@ -8,22 +8,37 @@ import {
 } from "@mui/icons-material";
 import { Avatar, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { styled } from "styled-components";
+import { db } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 function Chat(props) {
   const [seed, setSeed] = useState("");
   const [input, setInput] = useState("");
   const [incoming, setIncoming] = useState(false);
+  const [chatName, setChatName] = useState("");
+  const { chatId } = useParams();
 
-  const sendMessage = (event) => {
-    event.preventDefault();
-    console.log("okej ", input);
+  const sendMessage = (e) => {
+    e.preventDefault();
     setInput("");
   };
 
+  async function getChat() {
+    const docRef = doc(db, "chats", chatId);
+    const docSnap = await getDoc(docRef);
+
+    docSnap.data() ? setChatName(docSnap.data().name) : console.log("no");
+  }
+
+  useEffect(() => {
+    getChat();
+  }, [chatId]);
+
   useEffect(() => {
     setSeed(Math.floor(Math.random() * 5000));
-  }, []);
+  }, [chatId]);
 
   return (
     <Container>
@@ -31,7 +46,7 @@ function Chat(props) {
         <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
 
         <ChatHeaderInfo>
-          <h3>Name</h3>
+          <h3>{chatName}</h3>
           <p>Last seen at 03:46</p>
         </ChatHeaderInfo>
 
