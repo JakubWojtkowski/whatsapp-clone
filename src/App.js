@@ -1,26 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled } from "styled-components";
 import Sidebar from "./components/Sidebar";
 import Chat from "./components/Chat";
+import Login from "./components/Login";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 function App() {
+  const [user, setUser] = useState(null);
+
   return (
     <AppContainer>
-      <AppContent>
-        <Router>
-          <Sidebar />
-          <Switch>
-            <Route path="/chats/:chatId">
-              <Chat />
-            </Route>
+      {!user ? (
+        <Login />
+      ) : (
+        <AppContent>
+          <Router>
+            <Sidebar />
+            <Switch>
+              <Route path="/chats/:chatId">
+                <Chat />
+              </Route>
 
-            <Route path="/">
-              <h1>home screen</h1>
-            </Route>
-          </Switch>
-        </Router>
-      </AppContent>
+              <Route path="/">
+                <h1>home screen</h1>
+              </Route>
+            </Switch>
+          </Router>
+        </AppContent>
+      )}
     </AppContainer>
   );
 }
