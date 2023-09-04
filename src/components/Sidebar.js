@@ -8,9 +8,11 @@ import { FilterList, MoreVert, SearchOutlined } from "@mui/icons-material";
 import SidebarChat from "./SidebarChat";
 import { db } from "../firebase";
 import { collection, onSnapshot } from "firebase/firestore";
+import { useStateValue } from "../StateProvider";
 
 function Sidebar() {
   const [chats, setChats] = useState([]);
+  const [{ user }, dispatch] = useStateValue();
 
   async function queryCollection() {
     const unsubscribe = onSnapshot(collection(db, "chats"), (snapshot) => {
@@ -35,7 +37,7 @@ function Sidebar() {
     <Container>
       <SidebarHeader>
         <IconButton>
-          <Avatar />
+          <Avatar src={user?.photoURL} />
         </IconButton>
 
         <SidebarHeaderRight>
