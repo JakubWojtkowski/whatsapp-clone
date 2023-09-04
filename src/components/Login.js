@@ -3,12 +3,19 @@ import React from "react";
 import { styled } from "styled-components";
 import { auth, googleProvider } from "../firebase";
 import { signInWithPopup } from "firebase/auth";
+import { useStateValue } from "../StateProvider";
+import { actionTypes } from "../reducer";
 
 function Login() {
+  const [{}, dispatch] = useStateValue();
+
   const signIn = async () => {
     await signInWithPopup(auth, googleProvider)
       .then((result) => {
-        console.log(result);
+        dispatch({
+          type: actionTypes.SET_USER,
+          user: result.user,
+        });
       })
       .catch((error) => {
         console.log(error.message);
