@@ -11,12 +11,19 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { styled } from "styled-components";
 import { db } from "../firebase";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+} from "firebase/firestore";
 
 function Chat(props) {
   const [seed, setSeed] = useState("");
   const [input, setInput] = useState("");
   const [incoming, setIncoming] = useState(false);
+  const [messages, setMessages] = useState([]);
   const [chatName, setChatName] = useState("");
   const { chatId } = useParams();
 
@@ -26,10 +33,21 @@ function Chat(props) {
   };
 
   async function getChat() {
+    // chats
     const docRef = doc(db, "chats", chatId);
     const docSnap = await getDoc(docRef);
-
     docSnap.data() ? setChatName(docSnap.data().name) : console.log("no");
+
+    console.log(collection(docRef, "messages"));
+    // messages
+    onSnapshot(collection(docRef, "messages"), (snapshot) => {
+      setMessages(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }))
+      );
+    });
   }
 
   useEffect(() => {
@@ -62,11 +80,15 @@ function Chat(props) {
       </ChatHeader>
 
       <ChatBody>
-        <ChatBodyMessage toggle={incoming}>
-          <ChatBodyMessageName>Jakub Wojtkowski</ChatBodyMessageName>
-          Hello world
-          <ChatBodyMessageTime>06:52</ChatBodyMessageTime>
-        </ChatBodyMessage>
+        {messages.map((message) => {
+          return (
+            <ChatBodyMessage key={message.id} id={message.id} toggle={incoming}>
+              <ChatBodyMessageName>{message.name}</ChatBodyMessageName>
+              {message.message}
+              <ChatBodyMessageTime>{message.timestamp}</ChatBodyMessageTime>
+            </ChatBodyMessage>
+          );
+        })}
       </ChatBody>
 
       <ChatFooter>
