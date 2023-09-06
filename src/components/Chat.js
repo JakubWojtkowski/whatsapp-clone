@@ -17,6 +17,7 @@ import {
   getDoc,
   getDocs,
   onSnapshot,
+  query,
 } from "firebase/firestore";
 
 function Chat(props) {
@@ -33,20 +34,28 @@ function Chat(props) {
   };
 
   async function getChat() {
-    // chats
+    // chat
     const docRef = doc(db, "chats", chatId);
     const docSnap = await getDoc(docRef);
     docSnap.data() ? setChatName(docSnap.data().name) : console.log("no");
 
-    console.log(collection(docRef, "messages"));
     // messages
-    onSnapshot(collection(docRef, "messages"), (snapshot) => {
-      setMessages(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data(),
-        }))
-      );
+    const q = query(collection(db, "chats"));
+    const snapshot = await getDocs(q);
+    const data = snapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+    data.map(async (el) => {
+      const messageQ = query(collection(db, `chats/${chatId}/messages`));
+      const messageDetails = await getDocs(messageQ);
+      const messageInfo = messageDetails.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      console.log(messageInfo);
+      setMessages(messageInfo);
+      console.log(messages);
     });
   }
 
@@ -80,12 +89,14 @@ function Chat(props) {
       </ChatHeader>
 
       <ChatBody>
-        {messages.map((message) => {
+        {messages?.map((message) => {
           return (
             <ChatBodyMessage key={message.id} id={message.id} toggle={incoming}>
               <ChatBodyMessageName>{message.name}</ChatBodyMessageName>
               {message.message}
-              <ChatBodyMessageTime>{message.timestamp}</ChatBodyMessageTime>
+              <ChatBodyMessageTime>
+                {new Date(message.timestamp?.toDate().toUTCString())}
+              </ChatBodyMessageTime>
             </ChatBodyMessage>
           );
         })}
