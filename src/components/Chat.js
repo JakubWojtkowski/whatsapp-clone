@@ -89,17 +89,22 @@ function Chat(props) {
       </ChatHeader>
 
       <ChatBody>
-        {messages?.map((message) => {
-          return (
-            <ChatBodyMessage key={message.id} id={message.id} toggle={incoming}>
-              <ChatBodyMessageName>{message.name}</ChatBodyMessageName>
-              {message.message}
-              <ChatBodyMessageTime>
-                {new Date(message.timestamp?.toDate().toUTCString())}
-              </ChatBodyMessageTime>
-            </ChatBodyMessage>
-          );
-        })}
+        {messages &&
+          messages.map((message) => {
+            return (
+              <ChatBodyMessage
+                key={message.id}
+                id={message.id}
+                toggle={incoming}
+              >
+                <ChatBodyMessageName>{message.name}</ChatBodyMessageName>
+                {message.message}
+                <ChatBodyMessageTime>
+                  {new Date(message.timestamp?.toDate()).toUTCString()}
+                </ChatBodyMessageTime>
+              </ChatBodyMessage>
+            );
+          })}
       </ChatBody>
 
       <ChatFooter>
