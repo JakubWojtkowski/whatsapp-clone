@@ -12,13 +12,16 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { styled } from "styled-components";
 import { db } from "../firebase";
 import {
+  addDoc,
   collection,
   doc,
   getDoc,
   getDocs,
-  onSnapshot,
+  orderBy,
   query,
+  serverTimestamp,
 } from "firebase/firestore";
+import { useStateValue } from "../StateProvider";
 
 function Chat(props) {
   const [seed, setSeed] = useState("");
@@ -27,18 +30,30 @@ function Chat(props) {
   const [messages, setMessages] = useState([]);
   const [chatName, setChatName] = useState("");
   const { chatId } = useParams();
+  const [{ user }, dispatch] = useStateValue();
 
-  const sendMessage = (e) => {
+  const sendMessage = async (e) => {
     e.preventDefault();
+
+    await addDoc(collection(db, `chats/${chatId}/messages`), {
+      message: input,
+      name: user.displayName,
+      timestamp: serverTimestamp(),
+    });
+
+    getMessages();
+
     setInput("");
   };
 
-  async function getChat() {
+  const getChat = async () => {
     // chat
     const docRef = doc(db, "chats", chatId);
     const docSnap = await getDoc(docRef);
     docSnap.data() ? setChatName(docSnap.data().name) : console.log("no");
+  };
 
+  const getMessages = async () => {
     // messages
     const q = query(collection(db, "chats"));
     const snapshot = await getDocs(q);
@@ -47,7 +62,10 @@ function Chat(props) {
       id: doc.id,
     }));
     data.map(async (el) => {
-      const messageQ = query(collection(db, `chats/${chatId}/messages`));
+      const messageQ = query(
+        collection(db, `chats/${chatId}/messages`),
+        orderBy("timestamp", "asc")
+      );
       const messageDetails = await getDocs(messageQ);
       const messageInfo = messageDetails.docs.map((doc) => ({
         ...doc.data(),
@@ -57,10 +75,11 @@ function Chat(props) {
       setMessages(messageInfo);
       console.log(messages);
     });
-  }
+  };
 
   useEffect(() => {
     getChat();
+    getMessages();
   }, [chatId]);
 
   useEffect(() => {
@@ -206,7 +225,7 @@ const ChatBodyMessage = styled.div`
   padding: 10px;
   border-radius: 8px;
   width: fit-content;
-  margin-bottom: 2px;
+  margin-bottom: 18px;
 
   ${(props) => {
     if (props.toggle) {
