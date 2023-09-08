@@ -8,3 +8,8 @@ body {
     Cantarell, Fira Sans, sans-serif;
   color: #e9edef;
 }
+
+a {
+  text-decoration: none !important;
+  color: #e9edef;
+}
