@@ -2,9 +2,39 @@ import React, { useEffect, useState } from "react";
 import { Avatar } from "@mui/material";
 import { styled } from "styled-components";
 import { Link } from "react-router-dom/cjs/react-router-dom";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { db } from "../firebase";
 
 function SidebarChat(props) {
   const [seed, setSeed] = useState("");
+  const [messages, setMessages] = useState([]);
+
+  const getLastMessage = async () => {
+    if (props.id) {
+      const q = query(collection(db, "chats"));
+      const snapshot = await getDocs(q);
+      const data = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      data.map(async (el) => {
+        const querySnapshot = await getDocs(
+          collection(db, `chats/${props.id}/messages`),
+          orderBy("timestamp", "desc")
+        );
+
+        const messageInfo = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setMessages(messageInfo);
+      });
+    }
+  };
+
+  useEffect(() => {
+    getLastMessage();
+  });
 
   useEffect(() => {
     setSeed(Math.floor(Math.random() * 5000));
@@ -19,7 +49,7 @@ function SidebarChat(props) {
             <h2>{props.name}</h2>
             <span>12:36</span>
           </ChatInfoHeader>
-          <p>Last message ...</p>
+          <p>{messages[0]?.message}</p>
         </ChatInfo>
       </Container>
     </Link>

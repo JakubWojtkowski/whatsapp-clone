@@ -26,7 +26,6 @@ import { useStateValue } from "../StateProvider";
 function Chat(props) {
   const [seed, setSeed] = useState("");
   const [input, setInput] = useState("");
-  const [incoming, setIncoming] = useState(false);
   const [messages, setMessages] = useState([]);
   const [chatName, setChatName] = useState("");
   const { chatId } = useParams();
@@ -48,33 +47,35 @@ function Chat(props) {
 
   const getChat = async () => {
     // chat
-    const docRef = doc(db, "chats", chatId);
-    const docSnap = await getDoc(docRef);
-    docSnap.data() ? setChatName(docSnap.data().name) : console.log("no");
+    if (chatId) {
+      const docRef = doc(db, "chats", chatId);
+      const docSnap = await getDoc(docRef);
+      docSnap.data() ? setChatName(docSnap.data().name) : console.log("no");
+    }
   };
 
   const getMessages = async () => {
     // messages
-    const q = query(collection(db, "chats"));
-    const snapshot = await getDocs(q);
-    const data = snapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-    data.map(async (el) => {
-      const messageQ = query(
-        collection(db, `chats/${chatId}/messages`),
-        orderBy("timestamp", "asc")
-      );
-      const messageDetails = await getDocs(messageQ);
-      const messageInfo = messageDetails.docs.map((doc) => ({
+    if (chatId) {
+      const q = query(collection(db, "chats"));
+      const snapshot = await getDocs(q);
+      const data = snapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
-      console.log(messageInfo);
-      setMessages(messageInfo);
-      console.log(messages);
-    });
+      data.map(async (el) => {
+        const messageQ = query(
+          collection(db, `chats/${chatId}/messages`),
+          orderBy("timestamp", "asc")
+        );
+        const messageDetails = await getDocs(messageQ);
+        const messageInfo = messageDetails.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setMessages(messageInfo);
+      });
+    }
   };
 
   useEffect(() => {
@@ -93,7 +94,12 @@ function Chat(props) {
 
         <ChatHeaderInfo>
           <h3>{chatName}</h3>
-          <p>Last seen at 03:46</p>
+          <p>
+            last seen at{" "}
+            {new Date(
+              messages[messages.length - 1]?.timestamp?.toDate()
+            ).toUTCString()}
+          </p>
         </ChatHeaderInfo>
 
         <ChatHeaderRight>
@@ -114,7 +120,7 @@ function Chat(props) {
               <ChatBodyMessage
                 key={message.id}
                 id={message.id}
-                toggle={incoming}
+                toggle={message.name === user.displayName ? false : true}
               >
                 <ChatBodyMessageName>{message.name}</ChatBodyMessageName>
                 {message.message}
