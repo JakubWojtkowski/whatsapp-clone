@@ -9,30 +9,31 @@ function SidebarChat(props) {
   const [seed, setSeed] = useState("");
   const [messages, setMessages] = useState([]);
 
-  const getLastMessage = async () => {
-    if (props.id) {
-      const q = query(collection(db, "chats"));
-      const snapshot = await getDocs(q);
-      const data = snapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      data.map(async (el) => {
-        const querySnapshot = await getDocs(
-          collection(db, `chats/${props.id}/messages`),
-          orderBy("timestamp", "desc")
-        );
-
-        const messageInfo = querySnapshot.docs.map((doc) => ({
+  useEffect(() => {
+    const getLastMessage = async () => {
+      if (props.id) {
+        const q = query(collection(db, "chats"));
+        const snapshot = await getDocs(q);
+        const data = snapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
-        setMessages(messageInfo);
-      });
-    }
-  };
+        data.map(async (el) => {
+          const querySnapshot = await getDocs(
+            query(
+              collection(db, `chats/${props.id}/messages`),
+              orderBy("timestamp", "desc")
+            )
+          );
 
-  useEffect(() => {
+          const messageInfo = querySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          setMessages(messageInfo);
+        });
+      }
+    };
     getLastMessage();
   });
 
