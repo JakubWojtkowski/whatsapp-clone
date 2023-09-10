@@ -207,6 +207,7 @@ const ChatBody = styled.div`
   padding: 30px;
   position: relative;
   z-index: 0;
+  overflow-y: scroll;
 
   &:before {
     position: absolute;
@@ -221,7 +222,6 @@ const ChatBody = styled.div`
     bottom: 0;
     opacity: 0.75;
   }
-  ${"" /* overflow-y: scroll; */}
 `;
 
 const ChatBodyMessage = styled.div`
@@ -288,6 +288,10 @@ const FormInput = styled.input`
 
   &:focus {
     outline: none;
+  }
+
+  &::placeholder {
+    color: #8696a0;
   }
 `;
 

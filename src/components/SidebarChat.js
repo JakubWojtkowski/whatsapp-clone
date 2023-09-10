@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 import { Link } from "react-router-dom/cjs/react-router-dom";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
+import { DoneAll } from "@mui/icons-material";
 
 function SidebarChat(props) {
   const [seed, setSeed] = useState("");
@@ -35,7 +36,7 @@ function SidebarChat(props) {
       }
     };
     getLastMessage();
-  });
+  }, [messages]);
 
   useEffect(() => {
     setSeed(Math.floor(Math.random() * 5000));
@@ -50,7 +51,9 @@ function SidebarChat(props) {
             <h2>{props.name}</h2>
             <span>12:36</span>
           </ChatInfoHeader>
-          <p>{messages[0]?.message}</p>
+          <ChatInfoMessage>
+            <DoneAll /> <p>{messages[0]?.message}</p>
+          </ChatInfoMessage>
         </ChatInfo>
       </Container>
     </Link>
@@ -93,5 +96,16 @@ const ChatInfoHeader = styled.div`
     color: #8696a0;
     font-size: 12px;
     margin-top: 6px;
+  }
+`;
+
+const ChatInfoMessage = styled.div`
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  gap: 5px;
+
+  .MuiSvgIcon-root {
+    font-size: 16px !important;
   }
 `;

@@ -94,7 +94,7 @@ const SidebarHeader = styled.div`
   justify-content: space-between;
   padding: 6px;
   background: #202c33;
-  border-right: 1px solid #0c1317;
+  border-right: 1px solid rgba(134, 150, 160, 0.15);
 `;
 
 const SidebarHeaderRight = styled.div`
@@ -117,7 +117,7 @@ const SidebarSearch = styled.div`
   background: #111b21;
 
   .MuiSvgIcon-root {
-    color: grey;
+    color: #8696a0;
   }
 `;
 
@@ -139,6 +139,9 @@ const SidebarInput = styled.input`
 
   &:focus {
     outline: none;
+  }
+  &::placeholder {
+    color: #8696a0;
   }
 `;
 
