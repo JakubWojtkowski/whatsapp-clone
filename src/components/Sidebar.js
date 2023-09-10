@@ -6,13 +6,26 @@ import ChatIcon from "@mui/icons-material/Chat";
 import { Avatar, IconButton } from "@mui/material";
 import { FilterList, MoreVert, SearchOutlined } from "@mui/icons-material";
 import SidebarChat from "./SidebarChat";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 import { useStateValue } from "../StateProvider";
+import { useHistory } from "react-router-dom";
+import { actionTypes } from "../reducer";
 
 function Sidebar() {
   const [chats, setChats] = useState([]);
   const [{ user }, dispatch] = useStateValue();
+  const history = useHistory();
+
+  const signOut = async () => {
+    await auth.signOut().then(() => {
+      dispatch({
+        type: actionTypes.SIGN_OUT_USER,
+        user: null,
+      });
+      history.push("/");
+    });
+  };
 
   async function queryCollection() {
     const unsubscribe = onSnapshot(collection(db, "chats"), (snapshot) => {
@@ -37,7 +50,7 @@ function Sidebar() {
     <Container>
       <SidebarHeader>
         <IconButton>
-          <Avatar src={user?.photoURL} />
+          <Avatar src={user?.photoURL} onClick={signOut} />
         </IconButton>
 
         <SidebarHeaderRight>
