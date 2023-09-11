@@ -35,8 +35,9 @@ function SidebarChat(props) {
         });
       }
     };
+    console.log("okej");
     getLastMessage();
-  }, [messages]);
+  }, [props.id]);
 
   useEffect(() => {
     setSeed(Math.floor(Math.random() * 5000));

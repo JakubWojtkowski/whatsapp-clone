@@ -13,3 +13,15 @@ a {
   text-decoration: none !important;
   color: #e9edef;
 }
+
+::-webkit-scrollbar {
+  width: 0.2em;
+}
+
+::-webkit-scrollbar-track {
+  background: #111b21;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8696a0;
+}

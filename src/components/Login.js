@@ -1,13 +1,17 @@
 import { Button } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "styled-components";
 import { auth, googleProvider } from "../firebase";
 import { signInWithPopup } from "firebase/auth";
 import { useStateValue } from "../StateProvider";
 import { actionTypes } from "../reducer";
+import { useHistory } from "react-router-dom";
+import { Route } from "react-router-dom/cjs/react-router-dom.min";
 
 function Login() {
   const [{}, dispatch] = useStateValue();
+
+  const history = useHistory();
 
   const signIn = async () => {
     await signInWithPopup(auth, googleProvider)
@@ -21,6 +25,18 @@ function Login() {
         console.log(error.message);
       });
   };
+
+  useEffect(() => {
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        dispatch({
+          type: actionTypes.SET_USER,
+          user: user,
+        });
+        <Route path="/" />;
+      }
+    });
+  }, []);
 
   return (
     <Container>
@@ -52,7 +68,7 @@ const Content = styled.div`
   padding: 100px;
   text-align: center;
   border-radius: 8px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 1px 1px 2px rgba(0, 0, 0, 0.4);
 
   img {
     height: 100px;
@@ -66,6 +82,11 @@ const Content = styled.div`
     color: inherit !important;
     text-transform: inherit !important;
     letter-spacing: 0.6px;
+    transition: all 250ms ease-in-out;
+  }
+
+  button:hover {
+    background-color: #00a884 !important;
   }
 `;
 
