@@ -35,7 +35,6 @@ function SidebarChat(props) {
         });
       }
     };
-    console.log("okej");
     getLastMessage();
   }, [props.id]);
 
