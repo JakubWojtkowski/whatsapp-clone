@@ -27,23 +27,23 @@ function Sidebar() {
     });
   };
 
-  async function queryCollection() {
-    const unsubscribe = onSnapshot(collection(db, "chats"), (snapshot) => {
-      setChats(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data(),
-        }))
-      );
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }
-
   useEffect(() => {
-    queryCollection();
+    const getChats = async () => {
+      const unsubscribe = onSnapshot(collection(db, "chats"), (snapshot) => {
+        setChats(
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            data: doc.data(),
+          }))
+        );
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    };
+
+    getChats();
   }, []);
 
   return (

@@ -16,20 +16,53 @@ import {
   collection,
   doc,
   getDoc,
-  getDocs,
+  onSnapshot,
   orderBy,
   query,
   serverTimestamp,
 } from "firebase/firestore";
 import { useStateValue } from "../StateProvider";
 
-function Chat(props) {
+function Chat() {
   const [seed, setSeed] = useState("");
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [chatName, setChatName] = useState("");
   const { chatId } = useParams();
   const [{ user }, dispatch] = useStateValue();
+
+  useEffect(() => {
+    const getChat = async () => {
+      // chat name
+      const docRef = doc(db, "chats", chatId);
+      const docSnap = await getDoc(docRef);
+      docSnap.data()
+        ? setChatName(docSnap.data().name)
+        : setChatName("Unknown chat's name");
+    };
+    getChat();
+  }, [chatId]);
+
+  useEffect(() => {
+    async function getMessages() {
+      // messages
+      const q = query(
+        collection(db, `chats/${chatId}/messages`),
+        orderBy("timestamp", "asc")
+      );
+
+      onSnapshot(q, (snapshot) => {
+        setMessages(
+          snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        );
+      });
+    }
+    getMessages();
+  }, [chatId]);
+
+  useEffect(() => {
+    setSeed(Math.floor(Math.random() * 5000));
+  }, [chatId]);
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -40,52 +73,8 @@ function Chat(props) {
       timestamp: serverTimestamp(),
     });
 
-    getMessages();
-
     setInput("");
   };
-
-  const getChat = async () => {
-    // chat
-    if (chatId) {
-      const docRef = doc(db, "chats", chatId);
-      const docSnap = await getDoc(docRef);
-      docSnap.data() ? setChatName(docSnap.data().name) : console.log("no");
-    }
-  };
-
-  const getMessages = async () => {
-    // messages
-    if (chatId) {
-      const q = query(collection(db, "chats"));
-      const snapshot = await getDocs(q);
-      const data = snapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      data.map(async (el) => {
-        const messageQ = query(
-          collection(db, `chats/${chatId}/messages`),
-          orderBy("timestamp", "asc")
-        );
-        const messageDetails = await getDocs(messageQ);
-        const messageInfo = messageDetails.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-        setMessages(messageInfo);
-      });
-    }
-  };
-
-  useEffect(() => {
-    getChat();
-    getMessages();
-  }, [chatId]);
-
-  useEffect(() => {
-    setSeed(Math.floor(Math.random() * 5000));
-  }, [chatId]);
 
   return (
     <Container>
@@ -114,22 +103,25 @@ function Chat(props) {
       </ChatHeader>
 
       <ChatBody>
-        {messages &&
-          messages.map((message) => {
-            return (
-              <ChatBodyMessage
-                key={message.id}
-                id={message.id}
-                toggle={message.name === user.displayName ? false : true}
-              >
-                <ChatBodyMessageName>{message.name}</ChatBodyMessageName>
-                {message.message}
-                <ChatBodyMessageTime>
-                  {new Date(message.timestamp?.toDate()).toUTCString()}
-                </ChatBodyMessageTime>
-              </ChatBodyMessage>
-            );
-          })}
+        {messages.map((message) => {
+          return (
+            <ChatBodyMessage
+              key={message.id}
+              id={message.id}
+              toggle={
+                message.name === user.displayName
+                  ? false.toString()
+                  : true.toString()
+              }
+            >
+              <ChatBodyMessageName>{message.name}</ChatBodyMessageName>
+              {message.message}
+              <ChatBodyMessageTime>
+                {new Date(message.timestamp?.toDate()).toUTCString()}
+              </ChatBodyMessageTime>
+            </ChatBodyMessage>
+          );
+        })}
       </ChatBody>
 
       <ChatFooter>
@@ -208,20 +200,17 @@ const ChatBody = styled.div`
   position: relative;
   z-index: 0;
   overflow-y: scroll;
-
-  &:before {
-    position: absolute;
-    content: "";
-    background-image: url("/images/whatsapp-background.png");
-    background-size: contain;
-    background-repeat: repeat;
-    background-position: top;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    opacity: 0.75;
-  }
+  background-image: url("/images/whatsapp-background.png");
+  background-repeat: repeat;
+  background-size: contain;
+  background-attachment: fixed;
+  background-position: top;
+  height: 100%;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  opacity: 0.75;
 `;
 
 const ChatBodyMessage = styled.div`
@@ -234,7 +223,7 @@ const ChatBodyMessage = styled.div`
   margin-bottom: 18px;
 
   ${(props) => {
-    if (props.toggle) {
+    if (props.toggle === "true") {
       return `
         background-color: #202c33;
       `;

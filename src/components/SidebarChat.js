@@ -2,53 +2,43 @@ import React, { useEffect, useState } from "react";
 import { Avatar } from "@mui/material";
 import { styled } from "styled-components";
 import { Link } from "react-router-dom/cjs/react-router-dom";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
 import { DoneAll } from "@mui/icons-material";
 
-function SidebarChat(props) {
+function SidebarChat({ id, name }) {
   const [seed, setSeed] = useState("");
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    const getLastMessage = async () => {
-      if (props.id) {
-        const q = query(collection(db, "chats"));
-        const snapshot = await getDocs(q);
-        const data = snapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-        data.map(async (el) => {
-          const querySnapshot = await getDocs(
-            query(
-              collection(db, `chats/${props.id}/messages`),
-              orderBy("timestamp", "desc")
-            )
-          );
+    async function getLastMessage() {
+      // messages
+      const q = query(
+        collection(db, `chats/${id}/messages`),
+        orderBy("timestamp", "desc")
+      );
 
-          const messageInfo = querySnapshot.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }));
-          setMessages(messageInfo);
-        });
-      }
-    };
+      onSnapshot(q, (snapshot) => {
+        setMessages(
+          snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        );
+      });
+    }
+
     getLastMessage();
-  }, [props.id]);
+  }, [id]);
 
   useEffect(() => {
     setSeed(Math.floor(Math.random() * 5000));
   }, []);
 
   return (
-    <Link to={`/chats/${props.id}`}>
+    <Link to={`/chats/${id}`}>
       <Container>
         <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
         <ChatInfo>
           <ChatInfoHeader>
-            <h2>{props.name}</h2>
+            <h2>{name}</h2>
             <span>12:36</span>
           </ChatInfoHeader>
           <ChatInfoMessage>
